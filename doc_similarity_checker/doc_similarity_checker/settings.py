@@ -113,14 +113,14 @@ USE_I18N = True
 
 USE_TZ = True
 
-SESSION_COOKIE_SECURE = True  # Use HTTPS in production
+SESSION_COOKIE_SECURE = not DEBUG  # Use HTTPS in production only
 SESSION_COOKIE_HTTPONLY = True  # Prevent JavaScript access
-CSRF_COOKIE_SECURE = True  # Use HTTPS for CSRF cookie
+CSRF_COOKIE_SECURE = not DEBUG  # Use HTTPS for CSRF cookie in production only
 CSRF_COOKIE_HTTPONLY = True  # Prevent JavaScript access to CSRF cookie
-CSRF_TRUSTED_ORIGINS = ['https://doc-similarity-checker.onrender.com']  # Trust Render domain
+CSRF_TRUSTED_ORIGINS = ['https://doc-similarity-checker.onrender.com'] if not DEBUG else []  # Trust Render domain in production
 CSRF_USE_SESSIONS = False  # Store CSRF token in cookie (default)
 CSRF_COOKIE_SAMESITE = 'Lax'  # CSRF cookie same-site policy
-CSRF_COOKIE_DOMAIN = '.onrender.com'  # Allow CSRF cookie for subdomains
+CSRF_COOKIE_DOMAIN = '.onrender.com' if not DEBUG else None  # Allow CSRF cookie for subdomains in production
 CSRF_COOKIE_AGE = 86400  # CSRF token valid for 24 hours
 
 
