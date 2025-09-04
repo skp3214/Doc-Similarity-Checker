@@ -19,23 +19,45 @@ def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            UserProfile.objects.create(user=user)
-            login(request, user)
-            return redirect('home')
+            try:
+                user = form.save()
+                try:
+                    UserProfile.objects.create(user=user)
+                except Exception as e:
+                    # If UserProfile creation fails, continue anyway
+                    print(f"Warning: Could not create UserProfile for user {user.username}: {e}")
+                login(request, user)
+                return redirect('home')
+            except Exception as e:
+                # Handle any other errors during user creation
+                print(f"Error creating user: {e}")
+                form.add_error(None, "An error occurred during registration. Please try again.")
+        else:
+            print(f"Form errors: {form.errors}")
     else:
         form = UserCreationForm()
     return render(request, 'register.html', {'form': form})
 
 def user_login(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            login(request, user)
-            next_url = request.GET.get('next', 'home')
-            return redirect(next_url)
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        try:
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                next_url = request.GET.get('next', 'home')
+                return redirect(next_url)
+            else:
+                # Invalid credentials
+                return render(request, 'login.html', {
+                    'error': 'Invalid username or password.'
+                })
+        except Exception as e:
+            print(f"Login error: {e}")
+            return render(request, 'login.html', {
+                'error': 'An error occurred during login. Please try again.'
+            })
     return render(request, 'login.html')
 
 def user_logout(request):

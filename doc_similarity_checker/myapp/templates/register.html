@@ -28,6 +28,14 @@
                 {% endfor %}
             {% endif %}
 
+            {% if form.non_field_errors %}
+                {% for error in form.non_field_errors %}
+                    <div class="error-message">
+                        <i class="fas fa-exclamation-triangle"></i> {{ error }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
             <div class="form-group">
                 <label for="id_username"><i class="fas fa-user"></i> Username</label>
                 <input type="text" id="id_username" name="username" placeholder="Choose a username" required>
