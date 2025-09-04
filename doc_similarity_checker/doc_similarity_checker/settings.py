@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,13 +20,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-7j&4=+(t!n)-o&v$9pfzb+v!2r&ps6z4+s&py0u@21%*r)^g89'
+from dotenv import load_dotenv
+
+load_dotenv()
+
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-7j&4=+(t!n)-o&v$9pfzb+v!2r&ps6z4+s&py0u@21%*r)^g89')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['doc-similarity-checker.onrender.com', '127.0.0.1', 'localhost']
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://doc-similarity-checker.onrender.com',
+]
 
 # Application definition
 
@@ -107,28 +114,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
 USE_TZ = True
-
-SESSION_COOKIE_SECURE = not DEBUG  # Use HTTPS in production only
-SESSION_COOKIE_HTTPONLY = True  # Prevent JavaScript access
-CSRF_COOKIE_SECURE = not DEBUG  # Use HTTPS for CSRF cookie in production only
-CSRF_COOKIE_HTTPONLY = True  # Prevent JavaScript access to CSRF cookie
-CSRF_TRUSTED_ORIGINS = [
-    'https://doc-similarity-checker.onrender.com',
-    'http://127.0.0.1',
-    'http://localhost',
-] if not DEBUG else [
-    'http://127.0.0.1',
-    'http://localhost',
-]  # Trust domains based on environment
-CSRF_USE_SESSIONS = False  # Store CSRF token in cookie (default)
-CSRF_COOKIE_SAMESITE = 'Lax'  # CSRF cookie same-site policy
-CSRF_COOKIE_DOMAIN = '.onrender.com' if not DEBUG else None  # Allow CSRF cookie for subdomains in production
-CSRF_COOKIE_AGE = 86400  # CSRF token valid for 24 hours
 
 
 # Static files (CSS, JavaScript, Images)
@@ -138,7 +128,23 @@ STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+# Media files
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 LOGIN_URL = '/auth/login/'
+
+# Security settings
+SESSION_COOKIE_SECURE = not DEBUG  # Use HTTPS in production only
+SESSION_COOKIE_HTTPONLY = True  # Prevent JavaScript access
+CSRF_COOKIE_SECURE = not DEBUG  # Use HTTPS for CSRF cookie in production only
+CSRF_COOKIE_HTTPONLY = True  # Prevent JavaScript access to CSRF cookie
+CSRF_USE_SESSIONS = False  # Store CSRF token in cookie (default)
+CSRF_COOKIE_SAMESITE = 'Lax'  # CSRF cookie same-site policy
+CSRF_COOKIE_AGE = 86400  # CSRF token valid for 24 hours
+
+# CSRF failure view
+CSRF_FAILURE_VIEW = 'myapp.views.csrf_failure'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
