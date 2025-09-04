@@ -48,6 +48,13 @@
 
 ---
 
+## ✨ ScreenShots
+
+![Screenshot_4-9-2025_13420_doc-similarity-checker onrender com](https://github.com/user-attachments/assets/fe3ed047-6e1d-4e99-8c21-8fdce93e71de)
+![Screenshot_4-9-2025_134639_doc-similarity-checker onrender com](https://github.com/user-attachments/assets/728af020-3560-402e-b405-9fda31490692)
+![Screenshot_4-9-2025_134758_doc-similarity-checker onrender com](https://github.com/user-attachments/assets/13b4f01b-d246-4111-8921-c06e1f5bff3b)
+
+
 ## 🚀 How It Works
 
 1. **📤 Upload Documents** - Select two files to compare (PDF, DOC, DOCX, or TXT)
