@@ -115,6 +115,23 @@ USE_TZ = True
 
 SESSION_COOKIE_SECURE = True  # Use HTTPS in production
 SESSION_COOKIE_HTTPONLY = True  # Prevent JavaScript access
+CSRF_COOKIE_SECURE = True  # Use HTTPS for CSRF cookie
+CSRF_COOKIE_HTTPONLY = True  # Prevent JavaScript access to CSRF cookie
+CSRF_TRUSTED_ORIGINS = ['https://doc-similarity-checker.onrender.com']  # Trust Render domain
+CSRF_USE_SESSIONS = False  # Store CSRF token in cookie (default)
+CSRF_COOKIE_SAMESITE = 'Lax'  # CSRF cookie same-site policy
+CSRF_COOKIE_DOMAIN = '.onrender.com'  # Allow CSRF cookie for subdomains
+CSRF_COOKIE_AGE = 86400  # CSRF token valid for 24 hours
+
+# Security settings for HTTPS
+SECURE_SSL_REDIRECT = True  # Redirect HTTP to HTTPS
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # For proxy servers like Render
+
+# CSRF failure view
+CSRF_FAILURE_VIEW = 'myapp.views.csrf_failure'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/

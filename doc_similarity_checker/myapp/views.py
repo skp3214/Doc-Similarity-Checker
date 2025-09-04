@@ -2,8 +2,18 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseForbidden
 from .utils import extract_text_from_file, calculate_similarity, get_file_extension
 from .models import UserProfile
+
+def csrf_failure(request, reason=""):
+    """
+    Custom CSRF failure view that provides helpful information
+    """
+    return render(request, 'csrf_failure.html', {
+        'reason': reason,
+        'title': 'Security Error'
+    }, status=403)
 
 def register(request):
     if request.method == 'POST':
