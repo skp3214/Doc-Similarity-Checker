@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - DocMatcher</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'CSS/modern-theme.css' %}">
+    <link rel="stylesheet" href="{% static 'CSS/profile.css' %}">
+</head>
+<body>
+    <nav class="navbar glass-card">
+        <h1><i class="fas fa-file-alt"></i> DocMatcher</h1>
+        <div class="nav-content">
+            <div class="auth-links">
+                <a href="{% url 'home' %}"><i class="fas fa-home"></i> Home</a>
+                <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+            <!-- Theme Toggle Button (automatically added by JS) -->
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="profile-section">
+            <div class="profile-header">
+                <h1><i class="fas fa-user"></i> Welcome, {{ user.username }}!</h1>
+                <p>Ready to compare some documents? Let's get started!</p>
+            </div>
+
+            <div class="profile-actions">
+                <div class="action-card glass-card glass-card-gradient-right">
+                    <i class="fas fa-file-upload"></i>
+                    <h3>Compare Documents</h3>
+                    <p>Upload two documents and get instant similarity analysis</p>
+                    <a href="{% url 'compare_documents' %}" class="action-btn">
+                        <i class="fas fa-upload"></i> Start Comparing
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

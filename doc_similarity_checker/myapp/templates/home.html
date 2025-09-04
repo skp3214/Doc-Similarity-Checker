@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Similarity Checker</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'CSS/modern-theme.css' %}">
+    <link rel="stylesheet" href="{% static 'CSS/home.css' %}">
+</head>
+<body>
+    <!-- Theme Toggle Button (automatically added by JS) -->
+
+    <nav class="navbar glass-card">
+        <h1><i class="fas fa-file-alt"></i> DocMatcher</h1>
+        <div class="nav-content">
+            <div class="auth-links">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'profile' %}"><i class="fas fa-user"></i> Profile</a>
+                    <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                {% else %}
+                    <a href="{% url 'login' %}"><i class="fas fa-sign-in-alt"></i> Login</a>
+                    <a href="{% url 'register' %}"><i class="fas fa-user-plus"></i> Register</a>
+                {% endif %}
+            </div>
+            <!-- Theme Toggle Button (automatically added by JS) -->
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="hero glass-card fade-in-up">
+            <h1>Document Similarity Checker</h1>
+            <p>Compare two documents and get instant similarity analysis using advanced AI technology. Supports PDF, DOC, DOCX, and TXT files.</p>
+            {% if user.is_authenticated %}
+                <p class="welcome-message">Welcome back, {{ user.username }}!</p>
+                <a href="{% url 'compare_documents' %}" class="cta-button glass-button">
+                    <i class="fas fa-upload"></i> Start Comparing Documents
+                </a>
+            {% else %}
+                <a href="{% url 'register' %}" class="cta-button glass-button">
+                    <i class="fas fa-user-plus"></i> Get Started
+                </a>
+            {% endif %}
+        </div>
+
+        <div class="features">
+            <div class="feature-card glass-card glass-card-gradient-top fade-in-up">
+                <i class="fas fa-file-pdf"></i>
+                <h3>Multiple Formats</h3>
+                <p>Support for PDF, DOC, DOCX, and TXT files. Extract text from any document type seamlessly.</p>
+            </div>
+            <div class="feature-card glass-card glass-card-gradient-diagonal fade-in-up">
+                <i class="fas fa-brain"></i>
+                <h3>AI-Powered Analysis</h3>
+                <p>Advanced natural language processing to understand document content and context.</p>
+            </div>
+            <div class="feature-card glass-card glass-card-gradient-bottom fade-in-up">
+                <i class="fas fa-chart-line"></i>
+                <h3>Accurate Results</h3>
+                <p>Get precise similarity scores with detailed analysis and confidence metrics.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'JS/modern-theme.js' %}"></script>
+</body>
+</html>

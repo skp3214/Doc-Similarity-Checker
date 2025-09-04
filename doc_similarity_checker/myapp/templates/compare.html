@@ -1,0 +1,170 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compare Documents - DocMatcher</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'CSS/modern-theme.css' %}">
+    <link rel="stylesheet" href="{% static 'CSS/compare.css' %}">
+</head>
+<body>
+    <!-- Theme Toggle Button (automatically added by JS) -->
+
+    <nav class="navbar glass-card">
+        <h1><i class="fas fa-file-alt"></i> DocMatcher</h1>
+        <div class="nav-content">
+            <div class="auth-links">
+                <a href="{% url 'home' %}"><i class="fas fa-home"></i> Home</a>
+            </div>
+            <!-- Theme Toggle Button (automatically added by JS) -->
+        </div>
+    </nav>
+
+    <div class="container">
+        {% if error %}
+            <div class="error-message">
+                <i class="fas fa-exclamation-triangle"></i> {{ error }}
+            </div>
+        {% endif %}
+
+        {% if result %}
+        <div class="results-section">
+            <div class="results-header">
+                <div class="similarity-score">{{ result.similarity_percentage }}%</div>
+                <h2>Similarity Analysis Complete</h2>
+                <p class="similarity-label">
+                    {% if result.similarity_percentage >= 80 %}
+                        <span class="similarity-high"><i class="fas fa-check-circle"></i> High Similarity Detected</span>
+                    {% elif result.similarity_percentage >= 50 %}
+                        <span class="similarity-moderate"><i class="fas fa-exclamation-triangle"></i> Moderate Similarity</span>
+                    {% else %}
+                        <span class="similarity-low"><i class="fas fa-times-circle"></i> Low Similarity</span>
+                    {% endif %}
+                </p>
+            </div>
+
+            <div class="files-comparison">
+                <div class="file-preview">
+                    <h4><i class="fas fa-file"></i> Document 1</h4>
+                    <p class="filename">{{ result.file1_name }}</p>
+                    <div class="content">{{ result.text1_preview }}</div>
+                </div>
+
+                <div class="file-preview">
+                    <h4><i class="fas fa-file"></i> Document 2</h4>
+                    <p class="filename">{{ result.file2_name }}</p>
+                    <div class="content">{{ result.text2_preview }}</div>
+                </div>
+            </div>
+
+            <div class="back-link">
+                <a href="{% url 'compare_documents' %}"><i class="fas fa-arrow-left"></i> Compare Different Files</a>
+            </div>
+        </div>
+        {% else %}
+        <form class="upload-section" method="post" enctype="multipart/form-data" id="uploadForm">
+            {% csrf_token %}
+            <h2><i class="fas fa-upload"></i> Upload Documents for Comparison</h2>
+
+            <div class="upload-grid">
+                <div class="upload-area" id="uploadArea1">
+                    <i class="fas fa-file-upload"></i>
+                    <h3>Document 1</h3>
+                    <p>Click to browse or drag & drop<br>PDF, DOC, DOCX, or TXT files</p>
+                    <input type="file" name="file1" id="file1" class="file-input" accept=".pdf,.doc,.docx,.txt" required>
+                    <div class="file-info" id="fileInfo1">
+                        <p id="fileName1"></p>
+                    </div>
+                </div>
+
+                <div class="upload-area" id="uploadArea2">
+                    <i class="fas fa-file-upload"></i>
+                    <h3>Document 2</h3>
+                    <p>Click to browse or drag & drop<br>PDF, DOC, DOCX, or TXT files</p>
+                    <input type="file" name="file2" id="file2" class="file-input" accept=".pdf,.doc,.docx,.txt" required>
+                    <div class="file-info" id="fileInfo2">
+                        <p id="fileName2"></p>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="compare-btn" id="compareBtn" disabled>
+                <i class="fas fa-upload"></i> Upload Both Files to Compare
+            </button>
+        </form>
+        {% endif %}
+    </div>
+
+    <script>
+        // File upload handling
+        const fileInputs = ['file1', 'file2'];
+        const uploadAreas = ['uploadArea1', 'uploadArea2'];
+        const fileInfos = ['fileInfo1', 'fileInfo2'];
+        const fileNames = ['fileName1', 'fileName2'];
+
+        fileInputs.forEach((inputId, index) => {
+            const input = document.getElementById(inputId);
+            const area = document.getElementById(uploadAreas[index]);
+            const info = document.getElementById(fileInfos[index]);
+            const name = document.getElementById(fileNames[index]);
+
+            input.addEventListener('change', function(e) {
+                if (this.files[0]) {
+                    name.textContent = this.files[0].name;
+                    info.style.display = 'block';
+                    area.classList.add('file-selected');
+                    checkFiles();
+                }
+            });
+
+            // Drag and drop functionality
+            area.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.classList.add('dragover');
+            });
+
+            area.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                this.classList.remove('dragover');
+            });
+
+            area.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('dragover');
+
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    input.files = files;
+                    const event = new Event('change');
+                    input.dispatchEvent(event);
+                }
+            });
+        });
+
+        function checkFiles() {
+            const file1 = document.getElementById('file1').files[0];
+            const file2 = document.getElementById('file2').files[0];
+            const compareBtn = document.getElementById('compareBtn');
+
+            if (file1 && file2) {
+                compareBtn.disabled = false;
+                compareBtn.innerHTML = '<i class="fas fa-search"></i> Compare Documents';
+            } else {
+                compareBtn.disabled = true;
+                compareBtn.innerHTML = '<i class="fas fa-upload"></i> Upload Both Files to Compare';
+            }
+        }
+
+        // Form submission with loading state
+        document.getElementById('uploadForm').addEventListener('submit', function(e) {
+            const compareBtn = document.getElementById('compareBtn');
+            compareBtn.disabled = true;
+            compareBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing Documents...';
+        });
+    </script>
+
+    <script src="{% static 'JS/modern-theme.js' %}"></script>
+</body>
+</html>
