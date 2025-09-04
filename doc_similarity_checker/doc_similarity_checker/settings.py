@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-7j&4=+(t!n)-o&v$9pfzb+v!2r&ps6z4+s&py0u@21%*r)^g89'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['doc-similarity-checker.onrender.com', '127.0.0.1', 'localhost']
 
@@ -117,7 +117,14 @@ SESSION_COOKIE_SECURE = not DEBUG  # Use HTTPS in production only
 SESSION_COOKIE_HTTPONLY = True  # Prevent JavaScript access
 CSRF_COOKIE_SECURE = not DEBUG  # Use HTTPS for CSRF cookie in production only
 CSRF_COOKIE_HTTPONLY = True  # Prevent JavaScript access to CSRF cookie
-CSRF_TRUSTED_ORIGINS = ['https://doc-similarity-checker.onrender.com'] if not DEBUG else []  # Trust Render domain in production
+CSRF_TRUSTED_ORIGINS = [
+    'https://doc-similarity-checker.onrender.com',
+    'http://127.0.0.1',
+    'http://localhost',
+] if not DEBUG else [
+    'http://127.0.0.1',
+    'http://localhost',
+]  # Trust domains based on environment
 CSRF_USE_SESSIONS = False  # Store CSRF token in cookie (default)
 CSRF_COOKIE_SAMESITE = 'Lax'  # CSRF cookie same-site policy
 CSRF_COOKIE_DOMAIN = '.onrender.com' if not DEBUG else None  # Allow CSRF cookie for subdomains in production
