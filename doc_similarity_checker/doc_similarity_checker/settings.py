@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-7j&4=+(t!n)-o&v$9pfzb+v!2r&ps6z4+s&py0u@21%*r)^g89'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['doc-similarity-checker.onrender.com']
+ALLOWED_HOSTS = ['doc-similarity-checker.onrender.com', '127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -123,15 +123,6 @@ CSRF_COOKIE_SAMESITE = 'Lax'  # CSRF cookie same-site policy
 CSRF_COOKIE_DOMAIN = '.onrender.com'  # Allow CSRF cookie for subdomains
 CSRF_COOKIE_AGE = 86400  # CSRF token valid for 24 hours
 
-# Security settings for HTTPS
-SECURE_SSL_REDIRECT = True  # Redirect HTTP to HTTPS
-SECURE_HSTS_SECONDS = 31536000  # 1 year
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # For proxy servers like Render
-
-# CSRF failure view
-CSRF_FAILURE_VIEW = 'myapp.views.csrf_failure'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
